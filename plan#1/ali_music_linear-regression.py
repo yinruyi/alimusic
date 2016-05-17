@@ -1,6 +1,7 @@
+#coding:utf-8
 '''
-ÊäÈë£ºsongs.csv & user_actions.csv
-Êä³ö£º#.txt£¨Ä³¸ö¸èÊÖÔÚÎ´À´Ä³ÌìµÄ¸èÇúÊÕÌıÁ¿£©
+è¾“å…¥ï¼šsongs.csv & user_actions.csv
+è¾“å‡ºï¼š#.txtï¼ˆæŸä¸ªæ­Œæ‰‹åœ¨æœªæ¥æŸå¤©çš„æ­Œæ›²æ”¶å¬é‡ï¼‰
 '''
 
 
@@ -8,7 +9,7 @@ import datetime
 import time
 from sklearn import linear_model
 
-def artist_songs(song_file):#Éú³É¸èÊÖ¸èÇú×Öµä¼°¸èÊÖÁĞ±í
+def artist_songs(song_file):#ç”Ÿæˆæ­Œæ‰‹æ­Œæ›²å­—å…¸åŠæ­Œæ‰‹åˆ—è¡¨
     f=open(song_file,'r')
     art_songs={}
     for line in f.readlines():
@@ -22,7 +23,7 @@ def artist_songs(song_file):#Éú³É¸èÊÖ¸èÇú×Öµä¼°¸èÊÖÁĞ±í
         artist.append(a)
     return art_songs,artist
 
-def position(art_songs,artist,s):#ÅĞ¶Ï¸èÇúsµÄÎ»ÖÃ
+def position(art_songs,artist,s):#åˆ¤æ–­æ­Œæ›²sçš„ä½ç½®
     for i in range(len(artist)):
         if s in art_songs[artist[i]]:
             songs=art_songs[artist[i]].split(',')
@@ -31,12 +32,12 @@ def position(art_songs,artist,s):#ÅĞ¶Ï¸èÇúsµÄÎ»ÖÃ
             pass
     return s_index
 
-def artist_list(art_songs,artist,actionfile):#Éú³É¸èÊÖÃ¿Ê×¸è¸÷Ã¿ÌìµÄÍ³¼Æ±í
+def artist_list(art_songs,artist,actionfile):#ç”Ÿæˆæ­Œæ‰‹æ¯é¦–æ­Œå„æ¯å¤©çš„ç»Ÿè®¡è¡¨
     art_list=[]
     for i in range(len(artist)):
-        n=len(art_songs[artist[i]].split(','))#Ã¿¸ö¸èÊÖÓĞ¼¸Ê×¸è
-        m=(datetime.datetime(2015,8,30)-datetime.datetime(2015,3,1)).days+1#Êı¾İÒ»¹²ÓĞ¶àÉÙÌì
-        art_list.append([[0 for ii in range(m)]for jj in range(n)])#³õÊ¼»¯
+        n=len(art_songs[artist[i]].split(','))#æ¯ä¸ªæ­Œæ‰‹æœ‰å‡ é¦–æ­Œ
+        m=(datetime.datetime(2015,8,30)-datetime.datetime(2015,3,1)).days+1#æ•°æ®ä¸€å…±æœ‰å¤šå°‘å¤©
+        art_list.append([[0 for ii in range(m)]for jj in range(n)])#åˆå§‹åŒ–
     f=open(actionfile,'r')
     flag=0
     while flag==0:
@@ -47,11 +48,11 @@ def artist_list(art_songs,artist,actionfile):#Éú³É¸èÊÖÃ¿Ê×¸è¸÷Ã¿ÌìµÄÍ³¼Æ±í
             data=line.strip('\n').split(',')
             s_index=position(art_songs,artist,data[1])
             ptime=time.localtime(int(data[2]))
-            t=(datetime.datetime(ptime[0],ptime[1],ptime[2])-datetime.datetime(2015,3,1)).days#´ËĞĞÊı¾İÊ±¼ä¶ÔÓ¦µÄÍ³¼Æ±íÎ»ÖÃ
+            t=(datetime.datetime(ptime[0],ptime[1],ptime[2])-datetime.datetime(2015,3,1)).days#æ­¤è¡Œæ•°æ®æ—¶é—´å¯¹åº”çš„ç»Ÿè®¡è¡¨ä½ç½®
             art_list[s_index[0]][s_index[1]][t]=art_list[s_index[0]][s_index[1]][t]+1
     return art_list
 
-def predict_model(art_list,artist,saveaddr):#Ô¤²âÄ£ĞÍ¡ª¡ªÏßĞÔ»Ø¹é£¬ÓÃÇ°Ò»ÌìµÄÊı¾İÔ¤²âºóÒ»ÌìµÄÊı¾İ£¨Ò»ÔªÏßĞÔ»Ø¹é£©
+def predict_model(art_list,artist,saveaddr):#é¢„æµ‹æ¨¡å‹â€”â€”çº¿æ€§å›å½’ï¼Œç”¨å‰ä¸€å¤©çš„æ•°æ®é¢„æµ‹åä¸€å¤©çš„æ•°æ®ï¼ˆä¸€å…ƒçº¿æ€§å›å½’ï¼‰
     artist_predict=[]
     for i in range(len(art_list)):
         song_value=[]
@@ -64,7 +65,7 @@ def predict_model(art_list,artist,saveaddr):#Ô¤²âÄ£ĞÍ¡ª¡ªÏßĞÔ»Ø¹é£¬ÓÃÇ°Ò»ÌìµÄÊı¾
             regr.fit(x,y)
             value=[]
             v=float(art_list[i][j][-1])
-            for inx in range(60):#ÍùºóÔ¤²â¶àÉÙÌì
+            for inx in range(60):#å¾€åé¢„æµ‹å¤šå°‘å¤©
                 v=regr.predict(v)[0]
                 value.append(v)
             song_value.append(value)
